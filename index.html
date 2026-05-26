@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>图图修行录 · 梵公子对话</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:-apple-system,"PingFang SC","Noto Sans SC",system-ui,sans-serif;
+    background:#f8f5ee;color:#2c2c2c;line-height:1.7;
+    -webkit-font-smoothing:antialiased
+  }
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(248,245,238,.96);backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid #e8e3da;
+    padding:0 16px;height:48px;
+    display:flex;align-items:center;justify-content:space-between
+  }
+  .topbar-title{font-size:14px;font-weight:700;color:#c8941e;letter-spacing:.5px}
+  .menu-btn{
+    width:32px;height:32px;background:#eee8dd;border:none;border-radius:8px;
+    color:#888;font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:background .15s
+  }
+  .menu-btn:active{background:#ddd5c8}
+  .drawer-overlay{
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,.25);z-index:200;
+    display:none;opacity:0;transition:opacity .3s
+  }
+  .drawer-overlay.show{display:block;opacity:1}
+  .drawer{
+    position:fixed;top:0;left:-280px;bottom:0;
+    width:260px;background:#fff;z-index:201;
+    padding:50px 16px 30px;overflow-y:auto;
+    transition:left .3s ease;box-shadow:4px 0 20px rgba(0,0,0,.06)
+  }
+  .drawer.open{left:0}
+  .drawer .label{font-size:10px;color:#ccc;letter-spacing:2px;margin:0 14px 8px;font-weight:600}
+  .nav-item{
+    display:block;padding:10px 14px;border-radius:10px;
+    color:#555;font-size:14px;text-decoration:none;
+    margin-bottom:1px;transition:all .15s;cursor:pointer;font-weight:500
+  }
+  .nav-item:active,.nav-item.active{background:#f5e6c6;color:#c8941e}
+  .main{max-width:600px;margin:0 auto;padding:64px 12px 40px}
+  .page{display:none}
+  .page.active{display:block}
+  .divider{display:flex;align-items:center;gap:8px;margin:24px 0 16px;font-size:11px;color:#ddd;letter-spacing:2px}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e0d8cc}
+  .hero{text-align:center;padding:14px 0 6px}
+  .hero .logo{font-size:36px;margin-bottom:2px;opacity:.7}
+  .hero h1{font-size:22px;font-weight:800;color:#c8941e;letter-spacing:1px}
+  .hero .sub{font-size:12px;color:#bbb;margin-top:1px}
+  .hero .char-line{margin-top:6px;letter-spacing:3px;font-size:16px;color:#bbb}
+  .card-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .card{background:#fff;border-radius:12px;padding:14px 16px;cursor:pointer;border-left:4px solid #c8941e;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
+  .card:active{background:#faf7f2;transform:scale(.99)}
+  .card h3{font-size:14px;color:#333;margin-bottom:2px;font-weight:700}
+  .card p{font-size:12px;color:#999;line-height:1.5}
+  .card .meta{font-size:10px;color:#ccc;margin-top:4px}
+  .page-title{font-size:20px;font-weight:800;color:#c8941e;line-height:1.3;padding-top:2px;margin-bottom:2px}
+  .page-meta{font-size:11px;color:#bbb;margin-bottom:10px}
+  .page-desc{font-size:13px;color:#888;margin-bottom:14px;line-height:1.7;padding:10px 14px;background:#faf8f4;border-radius:10px}
+  .sec{margin-bottom:22px}
+  .sec h3{font-size:16px;font-weight:700;color:#333;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #f0e8dc}
+  .sec h4{font-size:14px;font-weight:600;color:#555;margin:10px 0 4px}
+  .sec p{font-size:14px;color:#555;margin-bottom:8px;line-height:1.9}
+  .sec .g{color:#c8941e;font-weight:600}
+  .sec .b{font-weight:600;color:#333}
+  .q{background:#faf7f2;padding:10px 14px;margin:10px 0;border-radius:10px;font-size:13px;color:#7a6a3a;line-height:1.7;border-left:3px solid #c8941e}
+  .t{padding:10px 14px;margin:8px 0;border-radius:10px;font-size:13px;line-height:1.7}
+  .t.g{background:#eef6f0;border-left:3px solid #6bcb77;color:#3a6a4a}
+  .t.o{background:#fef6ee;border-left:3px solid #e67e22;color:#7a5a2a}
+  .t.r{background:#fef0ee;border-left:3px solid #c0392b;color:#7a3a3a}
+  .pillar{background:#fff;border-radius:12px;margin-bottom:14px;padding:15px 16px;border-left:4px solid #c8941e;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .pillar h3{font-size:15px;font-weight:700;color:#c8941e;margin-bottom:6px}
+  .pillar p{font-size:14px;color:#555;margin-bottom:6px;line-height:1.9}
+  .sc{background:#fff;border-radius:10px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .sc .st{font-weight:700;font-size:14px;margin-bottom:2px}
+  .sc .sd{font-size:13px;color:#777;line-height:1.7;margin-bottom:3px}
+  .sc .sa{font-size:13px;font-weight:600;margin-top:3px}
+  .sb{background:#faf7f2;border-radius:10px;padding:10px 14px;margin:8px 0}
+  .sb .r{display:flex;align-items:flex-start;gap:6px;margin-bottom:5px;font-size:13px;color:#555}
+  .sb .r:last-child{margin-bottom:0}
+  .sb .n{flex-shrink:0;width:18px;height:18px;background:#c8941e;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-top:3px}
+  .qr{background:#fff;border-radius:12px;padding:14px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);border:1px solid #eee8e0}
+  .qr h4{font-size:13px;color:#c8941e;text-align:center;margin-bottom:8px}
+  .qi{display:flex;gap:6px;margin-bottom:5px}
+  .qi:last-child{margin-bottom:0}
+  .qi .d{flex-shrink:0;width:20px;height:20px;background:#c8941e;color:#fff;font-weight:700;font-size:10px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .qi .t{font-size:13px;color:#666;line-height:1.6}
+  .qi .t strong{color:#c8941e}
+  .ab{background:#fff;border-radius:12px;padding:14px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);border:2px solid #c8941e}
+  .ab .at{font-size:12px;color:#c8941e;text-align:center;font-weight:700;margin-bottom:8px}
+  .ab .r{display:flex;flex-direction:column;gap:4px}
+  .ab .c{padding:7px 10px;border-radius:8px;background:#f5f0e8;font-size:13px;line-height:1.6}
+  .db{background:#fff;border-radius:12px;padding:12px;margin-top:10px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .db .dl{font-size:10px;color:#bbb;text-align:center;letter-spacing:1px;margin-bottom:4px}
+  .db .ds{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+  .db .dt{padding:5px 9px;border-radius:6px;background:#f5f0e8;font-size:11px}
+  .db .dt strong{color:#c8941e}
+  .db .hr{border-top:1px solid #eee;margin:7px 0}
+  .footer{text-align:center;padding:20px 0 10px;color:#bbb;font-size:11px;line-height:1.8}
+  .footer .fl{margin-top:4px;font-size:11px;color:#ccc;opacity:.5}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🐘 图图修行录</div>
+  <button class="menu-btn" id="menuBtn">☰</button>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <div class="label">📖 导航</div>
+  <a class="nav-item active" data-page="home">🏠 起航</a>
+  <a class="nav-item" data-page="life">🎓 大三·困局与破局</a>
+  <a class="nav-item" data-page="choice">⚔️ 嵌入式 or AI</a>
+  <a class="nav-item" data-page="charm">🔥 什么是魅力</a>
+  <a class="nav-item" data-page="pleasure">💥 什么是爽</a>
+  <a class="nav-item" data-page="state">⚡ 状态四象限</a>
+  <a class="nav-item" data-page="mind">🧠 通透心法</a>
+  <div style="border-top:1px solid #eee;margin:12px 0 8px"></div>
+  <div class="label">📝 待续</div>
+  <div style="font-size:11px;color:#ccc;padding:0 14px">后续对话会继续加入</div>
+</div>
+
+<div class="main">
+
+  <!-- ===== 首页 ===== -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="logo">🏴‍☠️</div>
+      <h1>图图修行录</h1>
+      <div class="sub">🐘 我和梵公子的对话整理</div>
+      <div class="char-line">🏴‍☠️路飞 👺索隆 🍳山治 ⛩️悟空 🔥贝吉塔 🗡️韩立 🐘图图 🧠梵公子</div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#ddd;margin:2px 0 6px">✦ ✦ ✦</div>
+    <div class="card-list">
+      <div class="card" onclick="goPage('life')"><h3>🎓 大三·困局与破局</h3><p>寒假荒废·四级抢救·嵌入式从头来·异地恋</p><div class="meta">完整对话 →</div></div>
+      <div class="card" onclick="goPage('choice')"><h3>⚔️ 嵌入式还是AI大模型</h3><p>学不动想换赛道？先分清楚主次</p><div class="meta">完整对话 →</div></div>
+      <div class="card" onclick="goPage('charm')"><h3>🔥 什么是魅力</h3><p>为什么我条件不差却吸引不到人？两套魅力说清楚</p><div class="meta">完整对话 →</div></div>
+      <div class="card" onclick="goPage('pleasure')"><h3>💥 什么是爽</h3><p>三种爽感·快毕业的人每天怎么活</p><div class="meta">完整对话 →</div></div>
+      <div class="card" onclick="goPage('state')"><h3>⚡ 状态四象限</h3><p>判断自己在哪个状态·失控了怎么拉回来</p><div class="meta">完整对话 →</div></div>
+      <div class="card" onclick="goPage('mind')"><h3>🧠 通透心法</h3><p>为什么梵公子能活得这么不纠结</p><div class="meta">完整对话 →</div></div>
+      <div class="card" style="border-left-color:#ddd;opacity:.5"><h3>📝 更多 · 待续</h3><p>后续对话会继续添加到这里</p></div>
+    </div>
+    <div class="footer" style="padding-top:24px">
+      <div>🏴‍☠️路飞 👺索隆 🍳山治 ⛩️悟空 🔥贝吉塔 🗡️韩立 🐘图图 🧠梵公子</div>
+      <div class="fl">☠️ 我是要成为海贼王的男人！ ⚡ かめはめ波 ⚡ 凡人修仙·逆天而行</div>
+    </div>
+  </div>
+
+  <!-- ===== 大三·困局与破局 ===== -->
+  <div class="page" id="page-life">
+    <div class="page-title">🎓 大三·困局与破局</div>
+    <div class="page-meta">2026.05.25</div>
+    <div class="page-desc">我是一个大三学生。寒假计划学嵌入式、比赛拿名次、暑假找实习——全废了。每天起得晚，健身午休花了很多时间，晚上和女朋友玩到凌晨。开学后四级不到半个月单词没背完，嵌入式也没学好。每个月代课挣钱去异地看女朋友。感觉自己的人生和想象的不一样了，很无力。</div>
+
+    <div class="sec">
+      <h3>🔍 你的核心问题到底是什么</h3>
+      <p>你可能会觉得你的问题是：嵌入式没学好、四级过不了、实习找不到。但让我告诉你真正的核心问题在哪里——<span class="g">你的计划系统和你的操作系统不兼容，而且你还在精神自残。</span></p>
+      <p>什么叫"计划系统和操作系统不兼容"？就是你给自己定了一个完美的寒假计划（每天学嵌入式6小时），但你根本不是那种能一天学6小时的人。你寒假每天的节奏是：健身、午休、陪女朋友——这些事本身一点问题都没有。你健身了，身体变好了；你陪女朋友了，感情维系了。但因为你脑子里一直有一个背景音乐在放"我应该在学习"，所以你休息的时候愧疚，学习的时候疲惫。结果是既没学好也没玩爽，两头不沾。</p>
+      <p>这就叫精神自残——你明明没有做错任何事，但你非要骂自己，把自己搞得很累。你的精力不是被学习和健身消耗掉的，是被你那颗"我应该不一样"的心消耗掉的。</p>
+      <div class="q">"你的问题不是能力不够，是你每天都在和'没有按计划走'的自己打架。你把80%的精力都花在了内耗上，只剩20%在真正做事。"</div>
+    </div>
+
+    <div class="sec">
+      <h3>📌 四级怎么办（只剩不到15天）</h3>
+      <p>你现在必须放弃一个幻想——"我还能把整本单词书背完"。不可能了。你要换一种打法，叫<span class="g">流氓冲刺策略</span>：</p>
+      <p><span class="b">① 听力（占35%分数）</span>——这是你最后的救命稻草。近三年的真题听力反复听，听到你能把每道题的答案位置背出来。你不用每句话都听懂，抓关键词就够了：时间（几点几分）、地点（in the library/at the airport）、数字（多少钱/多少个）、否定词（but/however/actually）、语气转折的地方。把这些词听到就圈起来，结合选项用排除法，正确率能到60%以上。每天花40分钟，用代课的后排时间塞耳机听。</p>
+      <p><span class="b">② 写作</span>——不要自己写长篇。去网上找两个万能模板，一个议论文的（开头+论点+论据+结论），一个书信/通知的（称呼+正文+落款）。背到滚瓜烂熟，考试直接套用。</p>
+      <p><span class="b">③ 阅读</span>——做题顺序非常重要：先做仔细阅读（分值最高），再做段落匹配（靠关键词定位），最后做选词填空（分值最低，不会就随便蒙，别浪费时间）。</p>
+      <p>四级过了就过了，不过明年还能再考。企业招嵌入式岗位，不会因为你四级没过就不要你。他们看的是你会不会写代码。</p>
+      <div class="t g">💡 换个角度想：你嵌入式都没学好，就算四级考了600分又有什么用？四级只是你在"不得不面对"的事情上投入最低限度的精力就可以了。</div>
+    </div>
+
+    <div class="sec">
+      <h3>📌 嵌入式怎么重新开始</h3>
+      <p>你原来的路线图是：寒假学完嵌入式→大四比赛拿名次→暑假找到实习。这个剧本已经是上个版本的了，你还抱着它不放，每天对着它骂自己——这是自残。</p>
+      <p><span class="g">接受寒假已经没了的事实。</span>现在你手里能抓住的时间，是从今天到12月出去实习的6个月。</p>
+      <p><span class="b">每天1.5到2小时的嵌入式代码实战，雷打不动。</span>看清楚——是"写代码"，不是"看视频"。看视频人人都会，你看了几个月了有什么进展？没有。你必须动手写代码。哪怕第一个项目只是一个LED灯用蓝牙控制亮灭，你把它写出来、跑通了，你在简历上就能写一行：熟悉嵌入式开发流程，有独立完成的小项目。</p>
+      <p>暑假的比赛你可以去参加，但目标不是拿名次——你的目标是去认识人、感受比赛氛围、看看别人是怎么做的。这就是路飞说的那句话——"我不是要成为什么，我是要做什么。"你去参与，就已经比躺在宿舍焦虑往前迈了一大步。</p>
+      <p>到9月份开学，你手里如果有1到2个能跑的小项目，12月出去找嵌入式实习，中小公司是愿意要的。应届生的嵌入式岗没有你想象的那么高门槛。</p>
+    </div>
+
+    <div class="sec">
+      <h3>📌 女朋友和代课怎么办</h3>
+      <p>你每个月代课挣点小钱，攒下来去异地看她。然后你跟我说你很焦虑——因为你一边在做这个选择，一边在骂自己"我本应该在学习"。</p>
+      <div class="q">"你选择了花时间和精力在感情上，就一定没有100%的时间和精力去学嵌入式。你不可能既要又要。你选了A，就坦然接受B不完美。别他妈选了A还要骂自己为什么不选B。"</div>
+      <p>而且最关键的是——<span class="b">你已经有了一个方向：毕业去她的城市找工作。</span>你知道这个信息有多重要吗？很多人毕业的时候连去哪都不知道。你有目标城市，有目标行业（嵌入式），只是节奏乱了，不是方向错了。</p>
+    </div>
+
+    <div class="sec">
+      <h3>⚡ 今天能做的事（别想太远）</h3>
+      <div class="ab">
+        <div class="at">🛑 今天就做这三件事</div>
+        <div class="r">
+          <div class="c">① 打开电脑查一个嵌入式入门实战项目（比如"STM32蓝牙控制LED"），写到今天晚饭前跑通它</div>
+          <div class="c">② 代课的时候用耳机听2套真题听力，只听不写，找感觉</div>
+          <div class="c">③ 睡觉前跟女朋友发一条消息，就说"今天写了一个小项目，挺开心的"</div>
+        </div>
+      </div>
+      <p>别想12月、别想暑假、别想毕业。今天的三件事做完了，你今天就已经赢了。</p>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ===== 嵌入式 or AI ===== -->
+  <div class="page" id="page-choice">
+    <div class="page-title">⚔️ 嵌入式还是AI大模型</div>
+    <div class="page-meta">2026.05.25</div>
+    <div class="page-desc">我最近在学黑马程序员24年的嵌入式盗版课，进度很慢。最近AI和agent很火，我也很感兴趣，不知道是不是该分精力去学。感觉自己手里两条鱼都嚼不烂。</div>
+
+    <div class="sec">
+      <h3>🤔 真相：你不是在选方向，你是在逃跑</h3>
+      <p>让我直接说一个你可能不爱听但必须知道的真相——<span class="g">你对AI心动，不是因为AI真的适合你，而是因为嵌入式太难了，你看不到正反馈，你本能地想跑。</span></p>
+      <p>这叫什么？做题家的路径依赖。你是不是觉得"我换个赛道就能起飞了"？转运营、转产品、转新媒体、转AI……你换多少个赛道都没用。因为你的问题不是赛道的问题，是你在赛道上跑了两步就跑不动了，然后觉得"这赛道不行"。换赛道之后呢？照样跑两步就跑不动了，照样觉得不行。</p>
+      <p>你现在嵌入式课进度慢，我来告诉你真正的原因——不是你笨，也不是课烂。<span class="b">是你根本没把你的注意力给这个事儿。</span>你怎么学的？代课的后排偷偷学、健身完了疲惫了硬着头皮看两眼、晚上陪女朋友聊完天了再强撑着翻几页。精力是散的，时间是碎的，心是花的。这个状态下学任何东西都学不进去。</p>
+      <div class="q">"你一手抓着两条鱼。每条都咬了一口，然后因为另一条的存在嚼不烂。结果两条都跑了，你两手空空。"</div>
+    </div>
+
+    <div class="sec">
+      <h3>🔑 正确策略：分清楚主线和副线</h3>
+      <p>我不劝你放弃AI，也不劝你死磕嵌入式。但你要分清楚主次：</p>
+      <p><span class="g">嵌入式是你的主线任务。</span>这是你从大三开始一直在跟的东西，是你年底找实习、毕业找工作的饭碗。这条路确定性高：嵌入式不像互联网大厂那样35岁危机严重，属于越老越吃香的行业。市场一直有需求（汽车电子、物联网、智能家居），而且门槛不是特别高，中小公司愿意培养新人。</p>
+      <p><span class="b">AI大模型是你的副线/兴趣。</span>你最近刷到的东西，听起来很性感、薪资很高。但你零基础。你知道真正做大模型岗位的人是什么背景吗？985/211硕士起步，很多是acm竞赛金牌出身的数学天才。你拿什么跟这些人卷？而且AI这个行业现在非常浮躁，今天火的框架明天可能就过时了。</p>
+      <div class="t g">💡 一周分配建议：周一至周五每天90-120分钟嵌入式 → 40分钟四级（5月考完试后这40分钟换成AI兴趣探索）→ 周六专心陪女朋友，别一边陪一边想学习 → 周日复盘本周学了什么 + 看看AI的新东西当放松</div>
+      <div class="t o">⚠️ 最怕的一种状态：嵌入式没学扎实，AI也没深入学习。两边都是半吊子。到了12月出去找实习——嵌入式岗嫌你代码量不够，AI岗嫌你没学历没背景。两边都不要你，你就真的尴尬了。</div>
+      <p style="text-align:center;margin-top:8px;font-weight:600;color:#c8941e;font-size:15px">先吃饱，再挑食。找到工作了，有稳定收入了，想学什么不行？</p>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ===== 什么是魅力 ===== -->
+  <div class="page" id="page-charm">
+    <div class="page-title">🔥 什么是魅力</div>
+    <div class="page-meta">2026.05.25</div>
+    <div class="page-desc">我问梵公子"给我讲讲什么是魅力"——因为我总觉得自己吸引不到女生，觉得是自己没魅力。梵公子的回答彻底颠覆了我的认知。</div>
+
+    <div class="sec">
+      <h3>💡 你脑子里想的"魅力"是错的</h3>
+      <p>我问你一个问题：当你听到"魅力"这个词的时候，你脑子里蹦出来的是什么？是不是腹肌、侧脸杀、穿西装的背影、健身房的照片、坐在咖啡厅里看书的精致生活？我告诉你——全错。这是电视剧和广告给你植入的幻觉。</p>
+      <p>在中国这片土地上，你必须把"魅力"这个词重新理解。因为这里流行着两套完全不同的魅力体系，大部分人只听说过第一套，但真正在市场上流通的是第二套。</p>
+    </div>
+
+    <div class="sec">
+      <h3>🏛️ 第一套：传统长期魅力</h3>
+      <p>这是你想象中的那种魅力。指的是一个人很松弛、有大把的空闲时间、精神世界很丰富、有自己独特的见闻和思想。你跟他接触会觉得"这个人好特别"，愿意长期探索他、了解他。这种魅力需要三个条件才能培养出来：<span class="b">①时间自由（不被工作压榨得精疲力尽） ②松弛感（不为生存焦虑） ③接触多元文化（见过足够多的世面）</span></p>
+      <div class="t r">❌ 但是！中国这片土地上不具备培养这种魅力的土壤。你看看身边的人：基层打工的心理性活着就不错了，哪有闲心发展精神世界？中层管理的上不去下不来，夹在中间焦虑得要死。创业的全年悬着心，不知道下个月收入在哪。企业家常年失眠，情感生活直接割舍掉了。从上到下没有一个人是不焦虑的。焦虑的人哪里来的松弛感？没有松弛感，哪来的魅力？</div>
+      <p>所以你看，你觉得自己"没有魅力"，其实不是你的错。是社会结构就不给你长魅力的条件。就像在盐碱地上种水稻，你不是种子不好，是地不行。</p>
+    </div>
+
+    <div class="sec">
+      <h3>🏪 第二套：中国市场生存魅力</h3>
+      <p>这才是你真正需要理解的东西。在中国这片土地上，真正在流通的魅力是三个词的组合：<span class="g">基本面合格 + 专一对我好 + 会撩。</span></p>
+      <p>你观察一下你身边那些在女生那里吃得开的男人——他帅到惊天动地了吗？没有。他富到可以包养女生了吗？也没有。但他做到了三件事：<span class="b">第一，他不丑</span>——穿得干净整齐，发型精神，社交账号不放乱七八糟的东西。<span class="b">第二，他让那个女生觉得他对自己是特别的</span>——愿意花时间陪她，愿意在她身上用心思。<span class="b">第三，他懂怎么推进关系</span>——什么时候该聊天、什么时候该约出来、什么时候该调情、什么时候该停下来。女生跟他在一起不用动脑子就很舒服、很放松。</p>
+      <div class="q">"你不是没有魅力，你是在盐碱地上种水稻。地不行——但这就是你的地，你没办法换。你只能认清规则，然后学会在这个规则里玩。"</div>
+    </div>
+
+    <div class="sec">
+      <h3>🧭 你现在能做的三件事</h3>
+      <p>别再纠结"我魅力不够怎么办"了。盯住这三件事，搞定了你就超过90%的人了：</p>
+      <p><span class="b">① 让自己不丑。</span>干净整洁、换个发型、眼镜换隐形（戴黑框眼镜给人的第一印象就是"国男"）、穿搭去繁就简。到了及格线就行了，别去折腾脸，帅的性价比极低。</p>
+      <p><span class="b">② 学推进关系的能力。</span>这不是让你去学话术，是让你去培养感觉。多和女生聊天、多约会、多实战。你聊100个女生之后，自然就知道什么时候该说什么话了。</p>
+      <p><span class="b">③ 在该付出的时候别抠搜。</span>不是让你花钱供养女生，是让你在该花时间、花心思的时候不要缩着。她需要你的时候你在，她说想吃什么东西你记得买，这些小事比转账管用多了。</p>
+      <p>这三个搞定了，剩下的10%等搞定了前面再想。</p>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ===== 什么是爽 ===== -->
+  <div class="page" id="page-pleasure">
+    <div class="page-title">💥 什么是爽</div>
+    <div class="page-meta">2026.05.25</div>
+    <div class="page-desc">我问梵公子"怎么生活？什么叫爽？"我是一个快毕业的大学生，之前的生活被焦虑填满，从来没认真想过"爽"这件事可以分三种完全不同的层次。</div>
+
+    <div class="sec">
+      <h3>🎮 第一层：消耗型爽（你每天都在吃的那种）</h3>
+      <p>打游戏、刷短视频、熬夜看剧、躺平什么也不干。你从小到大最熟悉的一种爽。</p>
+      <p>它的原理很简单：大脑在最短时间内释放多巴胺，让你觉得很爽。但它有一个致命的缺陷——<span class="b">爽完之后你更难受了。</span>你回想一下：打完游戏关掉电脑那一秒，心里是不是空荡荡的？刷了两小时短视频之后，是不是比没刷之前更焦虑了？</p>
+      <p>这就是消耗型爽的本质——它是在透支明天的快乐来换今天的快乐。就像你去银行取钱，取的时候很爽，但余额越来越少。你取多了，账户就空了。</p>
+      <p>消耗型爽可以吃吗？可以。但你要把它当成"奖励"，不能当"主食"。</p>
+    </div>
+
+    <div class="sec">
+      <h3>🏗️ 第二层：建设型爽（你很少体验到的那种）</h3>
+      <p>梵公子创业两年，每天只睡四五个小时。他跟我说："苦吗？非常苦。但在苦的过程中有一种非常特别的爽——看着自己亲手搭起来的东西从0到1长出来。"</p>
+      <p>你肯定也体验过这种感觉：健身第一个月看不到变化，第三个月突然发现自己穿衣服好看了——那一瞬间你心里是什么感觉？写代码卡了一整天，终于把那个bug修好了，程序跑通了——那一瞬间你心里是什么感觉？<span class="g">"我操，我他妈做到了！"</span></p>
+      <p>这种感觉就是建设型爽。它的特点是：做的过程不一定爽，甚至很痛苦，但它回味无穷。你每次回想起来，都会觉得自己很牛逼。</p>
+      <p><span class="b">建设型爽就是给你的"爽的银行"里存钱。</span>你今天写了一个小时的代码，你就是在存钱。你今天跑了三公里，你也是在存钱。</p>
+    </div>
+
+    <div class="sec">
+      <h3>👑 第三层：掌控型爽（最高级别）</h3>
+      <p>这是梵公子活得通透的核心原因。掌控型爽指的是——<span class="g">你完全掌控了自己的生活节奏。你知道今天要干什么，你干了，你也没有在这个过程中为难自己、没有内耗、没有自残。</span></p>
+      <p>梵公子有两个做人准则：<span class="b">第一，不开心的事情绝对不做。</span>只要一件事他不开心、不擅长、不喜欢，给再多钱他都不干。<span class="b">第二，脑袋僵了就立刻停。</span>哪怕今天直播能赚十万块钱，他感觉自己脑袋僵了、说不出话了——立刻关掉直播去调整。这就是掌控型爽：我决定我什么时候工作、什么时候休息。不是目标和计划牵着我走，是我牵着它们走。</p>
+      <div class="q">"当你完全掌控自己的生活节奏时，你既不会飘，也不会废。你每天都在一种平稳的、从容的状态里往前走。"</div>
+    </div>
+
+    <div class="sec">
+      <h3>📋 你作为快毕业的大学生，每天怎么活</h3>
+      <p>你不需要想太复杂。每天就三件事，做完就收工：</p>
+      <div class="ab">
+        <div class="at">🎯 每日三件事（存钱模板）</div>
+        <div class="r">
+          <div class="c" style="border-left:3px solid #27ae60">① <span class="b">一件对未来的建设型事</span> — 嵌入式代码实战1.5小时。这是你12月找实习的本钱。</div>
+          <div class="c" style="border-left:3px solid #2980b9">② <span class="b">一件对当下的建设型事</span> — 四级听力40分钟。5月考完之后把这40分钟换成跑步或健身。</div>
+          <div class="c" style="border-left:3px solid #e67e22">③ <span class="b">一件对今天的消耗型爽事</span> — 打游戏、陪女朋友聊天、刷B站。但条件是——你必须先把前两件事做了，存了钱才能取钱。</div>
+        </div>
+      </div>
+      <p>你把这三件事干完了，剩下的时间想躺就躺，想废就废，没有任何好自责的。因为你今天存钱了，你是带着成就感去享受的。</p>
+      <div class="q">"生活不是你把所有痛苦吃完最后给一颗糖。生活是你在吃糖的时候也在吃苦，在吃苦的时候也知道自己为什么在吃这个苦。"</div>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ===== 状态四象限 ===== -->
+  <div class="page" id="page-state">
+    <div class="page-title">⚡ 状态四象限</div>
+    <div class="page-meta">2026.05.25 · 完整详解版</div>
+    <div class="page-desc">我不再问"我该怎么办"，开始问"我怎么知道自己怎么了"——梵公子给了我一套方法，让我能搞清自己在哪个状态里，也知道失控了怎么把自己拉回来。</div>
+
+    <div class="sec">
+      <h3>🧭 先教你怎么判断自己现在在哪个状态</h3>
+      <p>你不需要分析、不需要反思、不需要想太多。就一个标准——<span class="b">你现在早晨是什么感觉？</span>我对号入座给你看：</p>
+
+      <div class="sc" style="border-left:4px solid #27ae60">
+        <div class="st" style="color:#27ae60">🟢 状态1 · 有劲有方向</div>
+        <div class="sd"><span class="b">你早上的感觉：</span>闹钟没响你就醒了，或者响了你能直接坐起来不赖床。你脑子里知道今天有个事等着你干——比如"必须把那个LED灯的代码调通"。身体是主动的，不是被逼的。</div>
+        <div class="sd"><span class="b">怎么判断：</span>问自己——"如果现在让我写代码，我想不想去？"答案是"行，走吧"——这就是状态1。如果答案是"想，但先刷会儿手机"——这不是状态1。</div>
+        <div class="sa" style="color:#27ae60">→ 你不需要任何策略。直接冲。别给自己加戏——不要先规划、不要先热身、不要先刷半小时视频再动手。直接打开电脑写代码。</div>
+        <div class="sd" style="margin-top:4px;font-size:12px;color:#999"><span class="b">⚠️ 状态1最大的坑：</span>好状态的时候想"今天学他6个小时"，结果目标太大把自己吓回去了。就正常学，别贪。</div>
+      </div>
+
+      <div class="sc" style="border-left:4px solid #2980b9">
+        <div class="st" style="color:#2980b9">🔵 状态2 · 有劲没方向</div>
+        <div class="sd"><span class="b">你早上的感觉：</span>睡得还行，不困。但你不知道今天该干什么。打开手机刷了会儿B站和朋友圈——一个小时过去了。你人还坐着，什么都没干。</div>
+        <div class="sd"><span class="b">怎么判断：</span>问自己——"我现在想干什么？"答案是"不知道"。你有精力但不犯困，但没有一个明确的目标拽着你走。</div>
+        <div class="sa" style="color:#2980b9">→ 最忌讳的是——想把自己逼进状态1。正确做法：<span class="b">做一件门槛最低的事。</span>不是"学两小时嵌入式"，是"打开Keil，写一行注释"。不是"跑三公里"，是"穿上跑鞋走出门"。</div>
+        <div class="sd" style="margin-top:4px;font-size:12px;color:#999"><span class="b">💡 核心口诀：</span>"骗自己开始，不要逼自己努力。"你的身体一旦动起来了，脑子自然跟上来。就跟推车一样——推起来那一下最费劲，一旦滚起来了就很轻松了。</div>
+      </div>
+
+      <div class="sc" style="border-left:4px solid #e67e22">
+        <div class="st" style="color:#e67e22">🟠 状态3 · 没劲有方向</div>
+        <div class="sd"><span class="b">你早上的感觉：</span>你知道该学嵌入式，但你不想动。坐在椅子上，心里想的全是"我知道该学，但我好累"。身体像灌了铅。</div>
+        <div class="sd"><span class="b">怎么判断：</span>问自己——"我知道该干什么吗？"知道。"那为什么不去做？"不想动。和状态2的区别——状态2是不知道干啥，状态3是知道干啥但干不动。</div>
+        <div class="sa" style="color:#e67e22">→ 最忌讳的是——逼自己用脑子。你身体累脑子虚，强迫自己学习只会越学越烦越恨自己。<span class="b">正确做法：先动身体，不动脑子。</span>去洗个热水澡、收拾房间、下楼走十分钟。你的身体和脑子是连着的，身体动起来了，脑子里的"不想动"按钮就会慢慢松开。</div>
+      </div>
+
+      <div class="sc" style="border-left:4px solid #c0392b">
+        <div class="st" style="color:#c0392b">🔴 状态4 · 没劲没方向</div>
+        <div class="sd"><span class="b">你早上的感觉：</span>根本不想起床。闹钟按了三次，最后一次直接关了。躺着刷手机越刷越焦虑，不知道起来能干什么。今天就这样废了。</div>
+        <div class="sd"><span class="b">怎么判断：</span>问自己——想干什么？什么都不想。知道该干什么吗？不知道。有精力吗？没有。三条全否——状态4。</div>
+        <div class="sa" style="color:#c0392b">→ 你脑子里想的任何"解决方法"都是假的。"再刷5分钟就起来"——5小时后你还在刷。<span class="b">不要想，直接做两个动作：第一步，把手机屏幕朝下扣在桌上。第二步，站起来，走出你现在的房间。</span>去哪里不重要——下楼走一圈、去阳台站三分钟、去便利店买瓶水。关键是让你的眼睛不再盯着那块发光的屏幕。一旦你站起来了走出去了，你就已经打破了状态4的循环。</div>
+      </div>
+
+      <div class="t g" style="margin-top:10px">
+        💡 <span class="b">超简单急救口诀：</span>每天早上问自己四个字——<span class="b">"有劲吗？有事吗？"</span><br>
+        有劲+有事→状态1→冲 / 有劲+没事→状态2→最小事起手 / 没劲+有事→状态3→先动身体 / 没劲+没事→状态4→关手机出门
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>🔍 第二步：你为什么会失控</h3>
+      <p>很多人觉得自己是突然崩的——"我昨天还好好的，今天突然什么都不想干了。"不对。<span class="g">你不是突然失控的。你是连续做了好几个"取钱"的决定，把自己一步一步耗干的。</span></p>
+      <p>你回头看你的寒假：每天起得晚→健身完没精力→午休睡很久→晚上和女朋友玩到凌晨。每一个环节都是消耗型爽。你从寒假第一天就在从"爽的银行"里取钱。取了两个月，开学当然显示负数了。</p>
+      <p>但你等到了负数才喊"我怎么控制不住了"——就像等银行透支了才问"我怎么没钱了"。太晚了。你要在余额还充足的时候就发现不对劲。</p>
+    </div>
+
+    <div class="sec">
+      <h3>👁️ 第三步：建立觉察系统（每天问自己三遍）</h3>
+      <p>你不需要写日记，不需要做表格。每天在三个时间点（通勤路上、吃饭时、洗澡时）想起来就问自己三个问题：</p>
+      <div class="sb">
+        <div class="r"><div class="n">1</div><span><span class="b">我现在是脑袋僵了还是脑袋转得动？</span> — 判断精力状态。僵了就别硬撑，转得动就继续。</span></div>
+        <div class="r"><div class="n">2</div><span><span class="b">我现在想做什么事？</span> — 判断动力方向。想学还是想躺？顺应自己，别骗自己。</span></div>
+        <div class="r"><div class="n">3</div><span><span class="b">我现在在做的事是在存钱还是在取钱？</span> — 判断行为价值。写代码是存钱，刷视频是取钱。</span></div>
+      </div>
+      <p>连续三次答案都是"僵了""不想动""取钱"——该停了。别等到崩盘。</p>
+    </div>
+
+    <div class="sec">
+      <h3>🆘 第四步：真的调整不过来怎么办</h3>
+      <p>首先你要知道：<span class="b">你肯定有调不过来的时候。</span>连梵公子也有。昨天一晚上没睡，今天困得要死，看到有人喷他也难受。他也调不过来。</p>
+      <p>人不是机器。关键是学会区分：</p>
+      <p><span class="b">真的不行</span> → 睡了8小时还困，浑身酸，没精神。那就躺，别怪自己。身体在说"我需要休息"。</p>
+      <p><span class="b">不想行</span> → 睡好了，刷了两小时手机然后说"状态不好"。你骗谁呢？这是懒不是累。</p>
+      <p>无论哪种情况，梵公子的<span class="g">兜底机制</span>：<span class="b">最低限度的输出。</span>平时1.5小时代码？降到15分钟。15分钟总写得了吧？写完了关掉。今天就算你赢了。既有成就感又没逼死自己。</p>
+      <div class="q">"最怕的不是调不过来，是调不过来的时候用消耗型爽去填空虚。越想调整越刷手机越内耗越崩。"</div>
+    </div>
+
+    <div class="qr">
+      <h4>📋 每天执行方案（截图保存）</h4>
+      <div class="qi"><div class="d">☀️</div><div class="t"><strong>早上醒来</strong>问自己：今天在哪个状态？→ 按4种状态卡行动。</div></div>
+      <div class="qi"><div class="d">🌙</div><div class="t"><strong>睡觉前</strong>问自己：今天存钱了吗？<br>存了→今天赢了 / 没存但知道原因→明天补 / 没存也不知道→明天从最低标准开始</div></div>
+      <div class="qi"><div class="d">⚡</div><div class="t"><strong>核心心法</strong>：不想"怎么不失控"，想"失控了能不能15分钟拉回来"。</div></div>
+    </div>
+
+    <div class="db" style="margin-top:12px">
+      <div class="dl">☀️ 早上四选一</div>
+      <div class="ds">
+        <div class="dt">有劲有方向 → <strong>冲</strong></div>
+        <div class="dt">有劲没方向 → <strong>最小事</strong></div>
+        <div class="dt">没劲有方向 → <strong>动身体</strong></div>
+        <div class="dt">没劲没方向 → <strong>出门</strong></div>
+      </div>
+      <div class="hr"></div>
+      <div class="dl">🌙 晚上三选一</div>
+      <div class="ds">
+        <div class="dt"><strong style="color:#27ae60">存钱了</strong> → 今天赢了</div>
+        <div class="dt"><strong style="color:#e67e22">没存·知原因</strong> → 明天补</div>
+        <div class="dt"><strong style="color:#c0392b">没存·不知</strong> → 明天最低标准</div>
+      </div>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ===== 通透心法 ===== -->
+  <div class="page" id="page-mind">
+    <div class="page-title">🧠 通透心法</div>
+    <div class="page-meta">2026.05.25</div>
+    <div class="page-desc">我问了梵公子一个直击灵魂的问题——"你为什么能活得这么通透？为什么每天这么开心？你的心法到底是什么？"这是我第一次听到梵公子把自己整个人生观的五根柱子完整讲出来。</div>
+
+    <div class="pillar">
+      <h3>01 · 我承认我是自私的，而且我他妈不为此感到羞愧</h3>
+      <p>你观察一下你的内耗是怎么产生的。举个例子：你想学嵌入式，但你身体说"我好累"。然后你脑子里有一个声音开始骂你："你怎么这么懒？别人都在努力你凭什么休息？"然后你怎么办？你带着内疚去休息——没休息好。你带着内疚去学习——没学进去。这就是内耗的全过程。</p>
+      <p>梵公子的做法完全不一样。他想休息的时候，就大大方方休息。他不觉得休息有任何错。他的原则特别简单，就一句话：<span class="g">要么全心全意地努力，要么全心全意地摆烂。不要半吊子。</span></p>
+      <p>你今天状态不好想躺平？可以。但你躺平的时候就认认真真地躺，享受你的休息，别一边刷手机一边想着"我还有代码没写"。你今天想学习？那就把手机放一边，认认真真学。</p>
+      <div class="q">"大部分人的问题不是不努力，是努力的时候想玩，玩的时候想努力。结果两样都没干好，还把自己搞崩溃了。"</div>
+    </div>
+
+    <div class="pillar">
+      <h3>02 · 这个世界上没有什么是非做不可的</h3>
+      <p>你脑子里是不是装了这些"必须"？"我必须在大四前学好嵌入式""我必须考过四级""我必须找到实习"。我告诉你一个真相——<span class="g">没有这些必须。这些都是你自己给自己套上去的枷锁。</span></p>
+      <p>梵公子讲了他自己的例子。他创业最困难的时候，刚来杭州，全身只有5万块钱。交了房租只剩2万。他给自己定了一个目标——三个月不出正反馈就死定了。结果怎样？越绷越崩，写东西写不出来，拍视频没状态。后来他做了一个决定：他给自己松绑了。"三个月没出正反馈我就滚回去上班呗，又不丢人。"结果他一松绑，状态回来了，活儿也干出来了。</p>
+      <div class="q">"允许自己失败的心态，比你逼自己成功更重要。因为你不怕失败了，你就不内耗了。你所有的能量都用在做事上，而不是用在对抗自己的恐惧上。"</div>
+    </div>
+
+    <div class="pillar">
+      <h3>03 · 我只看我自己，不跟别人比</h3>
+      <p>你为什么焦虑？因为你看到的全是别人的强项——同学A嵌入式学得真好，同学B四级稳过了，同学C找到了实习。你再看自己——啥也不是。</p>
+      <p>但你有没有想过，每个人的起点不一样、天赋不一样、家庭条件不一样？你拿自己去跟别人比，有什么意义？</p>
+      <p>梵公子只看一个标准：<span class="g">今天比昨天多懂了一个知识点——赢了。这个月比上个月多赚了一千块——赢了。今天比昨天少骂了自己一句——也是赢了。</span></p>
+      <p>你千万不要小看"少骂自己一句"这件事。你一天里面有多少时间在骂自己？"我怎么又玩手机了""我怎么这么废""我为什么管不住自己"——你每个字都在消耗你的能量。你把骂自己的时间省下来，写一行代码，你今天就已经赢了。</p>
+    </div>
+
+    <div class="pillar">
+      <h3>04 · 当下最重要，过去不重要，未来也不重要</h3>
+      <p>这三句话你要一起用，分开用效果减半：</p>
+      <p><span class="b">过去不重要。</span>寒假玩掉了就玩掉了，你天天念它有什么用？你念一万遍它能回来吗？不能。那你为什么要花时间在上面？</p>
+      <p><span class="b">未来其次重要。</span>天天担心12月找不到实习。你担心一万遍能找到吗？不能。那你把对未来的焦虑拉到今天来折磨自己，你是不是傻？</p>
+      <p><span class="b">当下最重要。</span>你唯一能控制的就是当下这一分钟。你是选择再刷五分钟手机，还是选择站起来打开电脑写一行代码？就这一个选择。你选对了，你就赢了。</p>
+      <p>怎么操作？简单——<span class="g">把你所有的"如果"换成"现在"。</span></p>
+      <div class="t o">
+        ❌ "如果我12月找不到实习怎么办" → ✅ <span class="g">"我现在能做点什么让我12月更有底气？"</span><br>
+        ❌ "如果我学不会嵌入式怎么办" → ✅ <span class="g">"我现在要不要打开电脑写三行代码？"</span>
+      </div>
+      <p>一旦你把"如果"换成"现在"，你就从一个被动焦虑的人，变成了一个主动选择的人。主动选择带来的力量感，远远大于被动焦虑。</p>
+    </div>
+
+    <div class="pillar">
+      <h3>05 · 不开心的事情一定做不长久</h3>
+      <p>梵公子是严格按照这个原则活的。只要一件事情他不开心、不擅长、不喜欢、不热爱，给再多钱他都不去做。因为他知道，逼自己做了最多坚持三天，然后崩溃，然后恨自己。</p>
+      <p>但你问他为什么工作那么拼命？为什么能熬夜到天亮写东西？原因很简单——<span class="g">因为他做这件事的时候，内心是爽的。</span>他写的东西发出去能帮到一个人，他做直播的时候有人听了有收获，他是发自内心地爽。身体累，但精神充实。这就是建设型爽。</p>
+      <div class="q">"你每上一级台阶，你就爽一下。它不是'苦'，它是'通往目标的阶梯'。"</div>
+      <p>你现在学嵌入式，如果你只是为了"找个好工作"去学，你肯定不爽。但如果你换个角度——我今天多学了一个概念，我就离"掌握一门吃饭的本事"更近了一步，今年年底我就可以去实习了，可以去女朋友的城市了。这么想，它就不是"苦"，是"阶梯"。</p>
+    </div>
+
+    <div class="qr" style="border:2px solid #c8941e;background:linear-gradient(135deg,#fff8ee,#fff)">
+      <h4 style="font-size:14px">📌 梵公子四句心法（背下来）</h4>
+      <div class="qi"><div class="d">1</div><div class="t" style="font-size:14px"><strong>不要内耗。</strong>想干就干，想休息就休息，别一边干一边骂自己。</div></div>
+      <div class="qi"><div class="d">2</div><div class="t" style="font-size:14px"><strong>没有非做不可的事。</strong>允许自己失败，反而更容易成功。</div></div>
+      <div class="qi"><div class="d">3</div><div class="t" style="font-size:14px"><strong>只看跟自己比。</strong>今天比昨天多干了哪怕五分钟，就算赢。</div></div>
+      <div class="qi"><div class="d">4</div><div class="t" style="font-size:14px"><strong>把"如果"换成"现在"。</strong>从被动焦虑变主动选择。</div></div>
+    </div>
+
+    <div style="margin-top:14px;text-align:center;padding:14px;background:#fff;border-radius:12px">
+      <p style="font-size:13px;color:#666;line-height:1.8">
+        通透不是天生的。通透是你想明白了——<br>
+        <span style="color:#c8941e;font-weight:600;font-size:14px">你这一辈子，说到底活的是你自己。</span><br>
+        你不是活给父母看的，不是活给女朋友看的，不是活给同学看的。<br>
+        你活着，首先是为了对得起你自己。<br>
+        你把你对自己的交代做好了，其他所有的东西自然就来了。
+      </p>
+    </div>
+    <div class="divider">✦ ✦ ✦</div>
+  </div>
+
+  <div class="footer">
+    <div>🏴‍☠️路飞 👺索隆 🍳山治 ⛩️悟空 🔥贝吉塔 🗡️韩立 🐘图图 🧠梵公子</div>
+    <div class="fl">☠️ 我是要成为海贼王的男人！ ⚡ かめはめ波 ⚡ 凡人修仙·逆天而行</div>
+  </div>
+</div>
+
+<script>
+  const mb=document.getElementById('menuBtn'),dr=document.getElementById('drawer'),ov=document.getElementById('drawerOverlay');
+  function oM(){dr.classList.add('open');ov.classList.add('show')}
+  function cM(){dr.classList.remove('open');ov.classList.remove('show')}
+  mb.addEventListener('click',oM);ov.addEventListener('click',cM);
+  function goPage(n){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const t=document.getElementById('page-'+n);if(t)t.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.page===n));
+    cM();window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav-item[data-page]').forEach(i=>i.addEventListener('click',()=>goPage(i.dataset.page)));
+</script>
+</body>
+</html>
