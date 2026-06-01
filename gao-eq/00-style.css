@@ -1,0 +1,106 @@
+/* 图图修行录 · 子页面统一样式 */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  background:#faf8f4;color:#2d2a24;line-height:1.8;
+  -webkit-font-smoothing:antialiased
+}
+.main{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+
+.back-bar{
+  margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:#999
+}
+.back-bar a{color:#b8860b;text-decoration:none;font-weight:500}
+.back-bar a:hover{text-decoration:underline}
+
+.page-title{font-size:22px;font-weight:700;color:#222;letter-spacing:-.3px}
+.page-meta{font-size:12px;color:#bbb;margin:2px 0 10px}
+.page-desc{font-size:14px;color:#777;background:#f5f0e8;padding:12px 14px;border-radius:10px;margin-bottom:16px;line-height:1.7}
+
+.sec{margin-bottom:18px}
+.sec h3{font-size:16px;font-weight:700;color:#333;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #e8e3da}
+.sec p{font-size:14px;color:#444;margin-bottom:10px;text-indent:0}
+
+.b{font-weight:700}
+.g{color:#b8860b;font-weight:600}
+.o{color:#c0392b;background:#fef0ee;padding:8px 12px;border-radius:8px;margin:6px 0;font-size:13px}
+.t{background:#f7f3ec;padding:8px 12px;border-radius:8px;margin:6px 0;font-size:13px}
+
+.q{
+  background:linear-gradient(135deg,#fcf5e6,#fff8ee);
+  border-left:3px solid #c8941e;
+  padding:12px 14px;border-radius:0 8px 8px 0;
+  margin:10px 0;font-size:14px;color:#5a4a2a;
+  line-height:1.7;font-style:italic
+}
+
+.sb{margin:8px 0}
+.sb .r{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start}
+.sb .n{
+  flex-shrink:0;width:22px;height:22px;
+  background:#b8860b;color:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700
+}
+
+/* 聊天记录特殊样式 */
+.msg{margin:6px 0;padding:8px 12px;border-radius:8px;font-size:13px;line-height:1.6}
+.msg.me{background:#eef6ff;border-left:3px solid #4a90d9;margin-left:16px}
+.msg.her{background:#fef5ec;border-left:3px solid #e67e22;margin-right:16px}
+.msg .sender{font-size:11px;font-weight:600;color:#999;margin-bottom:2px}
+.msg .time{float:right;font-size:10px;color:#ccc}
+
+/* 高亮标注 */
+.hl{background:linear-gradient(180deg,transparent 55%,#f5e6c6 55%);font-weight:600}
+
+/* 分隔线 */
+.divider{text-align:center;color:#ddd;font-size:12px;margin:24px 0;letter-spacing:6px}
+
+/* 急救卡 */
+.qr{
+  background:linear-gradient(135deg,#fff8ee,#fff);
+  border:2px solid #c8941e;border-radius:12px;
+  padding:14px;margin:12px 0
+}
+.qr h4{font-size:14px;color:#b8860b;margin-bottom:8px}
+.qi{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start;font-size:13px}
+.qi .d{
+  flex-shrink:0;width:22px;height:22px;
+  background:#c8941e;color:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700
+}
+.qi .t{background:none;padding:0;font-size:13px;line-height:1.5}
+
+/* 对话时间戳标签 */
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-right:4px;font-weight:600}
+.tag.t1{background:#e8f5e9;color:#2e7d32}/* 认知 */
+.tag.t2{background:#fff3e0;color:#e65100}/* 实战 */
+.tag.t3{background:#fce4ec;color:#c62828}/* 纠错 */
+
+.footer{text-align:center;padding:20px 0;font-size:11px;color:#bbb}
+
+/* 信息框 */
+.info{background:#eef6ff;border:1px solid #c8dff5;border-radius:10px;padding:12px 14px;margin:10px 0;font-size:13px;color:#2d5a8e;line-height:1.6}
+
+/* 关键发现 */
+.finding{
+  background:linear-gradient(135deg,#fefce8,#fdf6e3);
+  border:1px solid #e8d8b0;border-radius:10px;
+  padding:12px 14px;margin:10px 0;
+  font-size:14px;color:#5a4a2a;line-height:1.7
+}
+.finding .label{
+  display:inline-block;font-size:10px;padding:2px 8px;
+  background:#c8941e;color:#fff;border-radius:4px;
+  margin-bottom:6px;font-weight:600
+}
+
+/* 场景标注 */
+.scene{
+  background:#f8f6f2;border-left:3px solid #b8860b;
+  padding:8px 12px;border-radius:0 8px 8px 0;
+  margin:8px 0;font-size:13px;color:#555;line-height:1.6
+}
